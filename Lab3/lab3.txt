@@ -1,0 +1,74 @@
+1. Use wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz to
+download the zip file
+
+2. Use tar -xzvf coreutils-7.6.tar.gz to decompress the file
+
+3. Use mkdir coreutilsInstall to make a folder where coreutils will be
+installed
+
+4. Change directories into coreutils-7.6.tar.gz by using cd
+coreutils-7.6.tar.gz
+
+5. From there run ./configure
+--prefix=/u/cs/ugrad/yangzh/coreutilsInstall to configure the files
+for installing, and to make sure it installs into the temporary
+directory that we want
+
+6. Then run make to compile all of the files
+
+7. Then run make install to install the compiled files into
+~/coreutilsInstall
+
+8. Change directories into coreutilsInstall/bin using cd
+~/coreutilsInstall/bin, because that's where the ls command is stored
+
+9. Run ls -l in that directory to see that the date format is not
+correct
+
+10. Change directories into ~/coreutils-7.6 with cd ~/coreutils-7.6
+
+11. Use wget
+http://lists.gnu.org/archive/html/bug-coreutils/2009-09/msg00410.html
+to download a copy of the webpage with a patch in it
+
+12. Copy the section with the patch
+
+13. Create a new file called patch_file with emacs: emacs patch_file,
+paste the patch into there, and then clean up the html leftoevers so
+it's just the patch
+
+14. Use patch -p1 <patch_file to patch the file
+
+15. Type make to rebuild ls.c
+make  all-recursive: this was run because it needed to check all of
+the dependencies to see what was changed
+
+make  all-recursive: this was run because it needed to go back to all
+to check again
+
+make  all-am: this was run to check which files were changed and
+recompile them
+
+make  all-recursive: this was run to once again check if anything
+still needs to be recompiled
+
+16. To check that the patch fixed the bug: first run cd
+~/coreutils-7.6/src to change directories, then run ./ls -l to see
+that it outputs the date in a correct format; then run cd
+~/coreutilsInstall/bin to change directories into where the old version
+was installed, then run ./ls -l there to see that the old version is
+still outputing wrong dates
+
+17. Testing the patched version on new and old files: while I was
+testing the patched version (see above), there were files that were
+created years ago and also files that were just created today by the
+compiling process, so both were tested already
+
+18. Testing the installed version on new and old files: change
+directories into ~/coreutilsInstall/bin; run touch -t
+201101311759.30 testTime to create a file that has a last modified
+time of 2011; Then run ./ls -l to see that it outputs the wrong time
+for both old files (the one we just made) and new files (all the other
+files in that directory, since they were copied into there today).
+
+19. 

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+DIR=$1
+IFS=$'\n'
+DOTS=`ls -a $DIR | grep '^\..*' | sort`
+IFS=$'\n'
+WORDS=`ls -a $DIR | grep '^[^\.].*' | sort`
+ALL=$DOTS$'\n'$WORDS
+declare -a ALLFILES
+let count=0
+for FILE in $ALL
+do
+    if [ -r "$DIR/$FILE" ]
+    then
+        if [ ! -L "$DIR/$FILE" ]
+	then
+	    if [ -f "$DIR/$FILE" ]
+	    then
+		ALLFILES[$count]="$DIR/$FILE"
+		let count=count+1
+	    fi
+	fi
+    else
+	echo "$FILE"
+	echo "FILE NOT READABLE"
+    fi
+done
+
+let cur=0
+
+for FILE in "${ALLFILES[@]}"
+do
+    if [ ! -L "$FILE" ]
+    then
+	if [ -f "$FILE" ]
+	then
+	    let point=0
+	    for ONE in "${ALLFILES[@]}"
+	    do
+		if [ ! -L "$ONE" ]
+		then
+		    if [ -f "$ONE" ]
+		    then
+			cmp -s "$FILE" "$ONE"
+			let EXIT=$?
+			if [ $EXIT -eq 0 ]
+			then
+			    if [ $cur -ne $point ]
+			    then
+				ln -f $FILE $ONE
+			    fi
+			fi
+		    fi
+		fi
+		let point=point+1
+	    done
+	fi
+    fi
+    let cur=cur+1
+done

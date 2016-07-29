@@ -1,0 +1,22 @@
+1. This removal was not necessary, because "case_long_iso_time_style:"
+was a label for a goto statement. Since the goto statement that went
+to that label was removed in the second hunk, this label became
+inactive and would do nothing even if it was not removed.
+
+2. In the patch notes, it states that "ls -l now uses the traditional
+three field time style....in locales where a specific style has not
+been specified". So if this patch is used in a country where people
+don't speak English and they do not have a specified style, then ls -l
+will print the date such that the English month abbreviations
+will not be understood by the non-English speakers and they will also not
+understand the English time format. Also, scripts which relied on the
+previous date format will be confused when parsing the dates.
+
+3. Running the script on an empty file causes an IndexError: index out
+of range. This is because the list of lines gets passed into random's
+choice function, and the choince function raises IndexError if the
+list of lines is empty.
+
+4. When run with python3, there is a SyntaxError: invalid syntax
+raised for line 65 (except IOError as (errno, strerror):). This is
+because python3 has a different syntax for using IOError.

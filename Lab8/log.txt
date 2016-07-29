@@ -1,0 +1,66 @@
+1. Generating 10 million random numbers
+
+Use /dev/urandom to generate random numbers, -An removes the address
+locations at the beginning, -t f interprets the bits as double
+precision floating-point numbers, and -N 80000000 reads 80 million
+bytes to get 10 million numbers, because each float is 8 bytes.
+
+od -An -t f -N 80000000 </dev/urandom >tenmil.txt
+
+
+Use tr -s to remove duplicate spaces
+
+tr -s ' ' <tenmil.txt >tenmil1
+
+
+Use tr to change all spaces between the numbers into newlines
+
+tr ' ' '\n' <tenmil1 >tenmil.txt
+
+
+Use tr -s to remove duplicate newline characters
+tr -s '\n' <tenmil.txt >tenmil1
+
+
+2. Timing sort -g
+
+
+The -p option changes the time output format into the precise
+tranditional format. The -g command sorts numbers
+
+time -p sort -g <tenmil1 >/dev/null
+real 35.24
+user 195.33
+sys 0.50
+
+
+3. Time parallel sort
+
+One thread
+time -p sort -g --parallel=1 <tenmil1 >/dev/null
+real 189.73
+user 189.46
+sys 0.26
+
+
+Two threads
+time -p sort -g --parallel=2 <tenmil1 >/dev/null
+real 97.10
+user 186.37
+sys 0.26
+
+
+Four threads
+time -p sort -g --parallel=4 <tenmil1 >/dev/null
+real 55.97
+user 192.05
+sys 0.36
+
+
+Eight threads
+time -p sort -g --parallel=8 <tenmil1 >/dev/null
+real 35.50
+user 194.97
+sys 0.51
+
+

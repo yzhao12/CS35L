@@ -1,0 +1,99 @@
+1. Used wget
+http://web.cs.ucla.edu/classes/spring16/cs35L/assign/coreutils-with-bug.tar.gz
+to download the buggy version of coreutils
+
+2. Extracted the files with tar -xzvf coreutils-with-bug.tar.gz
+
+3. Change directories with cd coreutils-with-bug into the newly
+created directory
+
+4. Used ./configure to configure, and then make to build the program
+
+5. At the end of making, there was an error "conflicting types for
+'futimens'" in the utimens.h file, because there was a previous
+declaration of the name "futimens", so when a function prototype with
+the name "futimens" was created it caused an error. And because of
+that, making utimecmp.o failed, which trigger a chain reaction of make
+fails.
+
+6. Used wget
+http://web.cs.ucla.edu/classes/spring16/cs35L/assign/coreutils.diff to
+download the renaming patch
+
+7. Use make to build the program again, and the patch fixed the
+problem because it renamed the function that used a name that was
+already declared into something else.
+
+8. To reproduce the bug: made a temp folder with tmp=$(mktemp -d),
+then changed directories into it with cd $tmp, then made 3 files, one
+very old (touch -d '1918-11-11 11:00 GMT' armistice), and two very
+recent (touch now, sleep 1, touch now1), then I used TZ=UTC0
+~/coreutils-with-bug/src/ls -lt --full-time armistice now now1 to see
+that the faulty ls command does indeed display the 1918 file as the
+earliest made
+
+9. Used cd ~/coreutils-with-bug/src to change directories into where
+the source code for ls was
+
+10. Used emacs ls.c to open up the source code and scrolled through
+until I saw a function called "sort_files", and after reading some
+comments, I found out that it sorts files for output. Inside the
+function, there were various switch statements with cases such as
+"time_ctime" and "time_mtime". After reading more comments, I saw that
+time_mtime was the default mode of time, which was what I needed. So I
+looked inside the time_mtime case and saw that it set a function to be
+compare_mtime, which I then found. Compare_mtime calls cmp_mtime,
+which calls timespec_cmp and cmp. Looking at the code, I saw that the
+program uses timespec_cmp to see which of the programs was made
+earlier. Timespec_cmp was actually in another file in the lib
+directory, called timespec.h, once I was in there, I saw that
+timespec_cmp worked by subtracting the two time representations for
+two files and seeing if A-B is positive, negative, or zero
+
+11. Since this was where the calculation for the comparison is done, I
+was very suspicious that the bug might occur here, so I decided to
+set a break point on this function and started to run gdb. First I had
+to repeat step 8 to make the three files I was going to use for testing
+
+12. Once that was done, I started gdb with the command gdb
+~/coreutils-with-bug/src/ls
+
+13. When I got into gdb, I used the command b timespec.h:46 to set a
+breakpoint at timespec_cmp
+
+14. Then I ran the ls program with the command run -lt armistice now,
+now1
+
+15. Once the program hit the breakpoint, I first had to use stepi to
+step into the timespec_cmp funtion, then I used p diff to print out
+the diff variable (which was the result of A - B), to see if it was
+the correct value
+
+16. Printing diff yielded a very large number, which was not supposed
+to happen because there was not way the old file from 1918 was made
+later than the file now, so that was the bug
+
+17. There must have been a overflow problem when subtracting the two
+signed integers that caused diff to be a positive number
+
+18. To fix the bug, I first used cp timespec.h ./BUGFIX.H to copy
+timespec.h into a new file called BUGFIX.H
+
+19. Then I opened that new file in emacs and changed what timespec_cmp
+was before into a nested if statement like so:
+  if (a.tv_sec == b.tv_sec)
+      return 0;
+  else if (a.tv_sec < b.tv_sec)
+      return -1;
+  else
+      return 1;
+		  
+20. Then I used the command C-x 4 a to generate a changelog entry
+
+21. I then used diff -u timespec.h BUGFIX.H >~/lab5.diff to generate a
+patch, and pasted my changelog entry into the beginning of the patch
+
+
+When I try to recreate the bug on the SEASNET servers in my home
+directory, the 1918 file still shows up as the first file, but this
+time with a 2054 modified date. 

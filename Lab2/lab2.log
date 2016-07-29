@@ -1,0 +1,130 @@
+Lab 2 Log
+
+1. I used locale, which printed out a list of locale environment
+variables, to check the LC_All variable, since it was not set to C, I
+used export LC_All='C' to set it to C.
+
+2. I used the command sort /usr/share/dict/words >words to
+sort the list of words and put it into my words document.
+
+3. I ran the command wget
+http://web.cs.ucla.edu/classes/spring16/cs35L/assign/assign2.html to
+download a html file of the website. Then I opened that html file in a
+text editor and saved a text file version of the html file.
+
+4. tr -c 'A-Za-z' '[\n*]' <assign2.txt
+This command scans every character in assign2.txt, and if the
+character is not an uppercase or lowercase letter(e.g. numbers and
+symbols and space), replace it with the newline character.
+
+5. tr -cs 'A-Za-z' '[\n*]' <assign2.txt
+This command scans every character in assign2.txt, and if the
+character is not an uppercase or lowercase letter(e.g. numbers and
+symbols and space), replace it with the newline character. Afterwards,
+it goes through the document and replaces all the newline characters that
+appear multiple times in a row with a single newline
+character. The previous command outputted the document with many empty
+lines, but this command removes all the empty lines.
+
+6. tr -cs 'A-Za-z' '[\n*]' <assign2.txt | sort
+This command replaces all the numbers and symbols and spaces with newline
+characters, then it replaces all the duplicates of the newlines with
+only a single newline. Then it ends the text that remains to the sort
+command, which sorts the words left in the document
+alphabetically. The previous command had pretty much a word on each
+line, in the order that it was written back in the original
+document. This command also has pretty much a word on each line, but
+the words are sorted in alphabetical order.
+
+7. tr -cs 'A-Za-z' '[\n*]' <assign2.txt | sort -u
+This command does what the above commands do, but while the previous
+command outputs a list of sorted words that contains duplicates that
+are placed one right after another, this command outputs a sorted list
+of words with no duplicates. All the words are unique.
+
+8. tr -cs 'A-Za-z' '[\n*]' <assign2.txt | sort -u | comm - words
+This command does what all the above commands do, and it also sends it
+to the comm command. The comm command outputs three columns, the first
+column contains words only in the html file, the second column
+contains words only in the words file, and the third column contains
+words common to both files.
+
+9. tr -cs 'A-Za-z' '[\n*]' <assign2.txt | sort -u | comm -23 - words
+This command does all the modifications to the html file that the
+above commands did, then it sends it to the comm command with options
+-23. This makes the comm command output only the first column which
+includes words that only exist in the html file.
+
+
+
+#!/bin/bash
+tr [:upper:] [:lower:] |
+grep -e '<td>' -e '<tr>' | 
+tr -d '\n' |
+sed 's/<\/td>/\n/g' |
+grep '^ *<td>.*$' |
+sed 's/<[^>]*>//g' |
+sed 's/^ *//g' |
+tr \` \' |
+tr ',' ' ' |
+tr -s ' ' |
+tr ' ' '\n' |
+tr -s '\n' |
+grep "^[pk\'mnwlhaeiou]*$" |
+sort -u
+
+Explanation of Script
+
+1. Specifies a bash script
+2. Make the entire document lowercased
+3. Extract all of the lines with a <tr> or <td>
+4. Delete all of the newline characters to make one continuous line
+5. Turn all of the </td> at the end of the lines into newline
+characters so that the english and hawaiian words are separated again
+6. All english words are on lines that begin with <tr>, so only
+extract the lines that begin with <td>
+7. Delete all of the HTML tags
+8. Delete all of the spaces that appear at the beginning of the lines
+9. Turn all ` into '
+10. Turn all commas into spaces
+11. Squeeze the spaces together
+12. Turn the spaces between words into newline characters, so words
+with spaces and commas will become separate words
+13. Get rid of empty lines
+14. Get rid of all incorrectly formatted words that contain English
+characters
+15. Sort
+
+
+Making hword, a Hawaiian dictionary:
+./buildwords <hwnwdseng.htm >hwords
+
+Spellcheck Hawaiian:
+tr -cs 'A-za-z' '[\n*]' <assign2.html | tr [:upper:] [:lower:] | sort
+-u | comm -23 - hwords
+
+Using wc to count the number of words misspelled as Hawaiian:
+tr -cs 'A-za-z' '[\n*]' <assign2.html | tr [:upper:] [:lower:] | sort
+-u | comm -23 - hwords | wc
+
+There are 405 misspelled Hawaiian words
+
+Using wc to count the number of words misspelled as English:
+tr -cs 'A-za-z' '[\n*]' <assign2.html | tr [:upper:] [:lower:] | sort
+-u | comm -23 - words | wc
+
+There are 38 misspelled English words
+
+
+Finding words that are misspelled as English but correct in Hawaiian:
+tr -cs 'A-za-z' '[\n*]' <assign2.html | tr [:upper:] [:lower:] | sort
+-u | comm -23 - words | comm -12 - hwords
+
+These words include: halau, lau, wiki
+
+
+Finding words that are misspelled as Hawaiian but correct in English:
+tr -cs 'A-za-z' '[\n*]' <assign2.html | tr [:upper:] [:lower:] | sort
+-u | comm -23 - hwords | comm -12 - words
+
+These words include: export, any, bugs

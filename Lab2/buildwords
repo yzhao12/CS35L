@@ -1,0 +1,15 @@
+#!/bin/bash
+tr [:upper:] [:lower:] |
+grep -e '<td>' -e '<tr>' | 
+tr -d '\n' |
+sed 's/<\/td>/\n/g' |
+grep '^ *<td>.*$' |
+sed 's/<[^>]*>//g' |
+sed 's/^ *//g' |
+tr \` \' |
+tr ',' ' ' |
+tr -s ' ' |
+tr ' ' '\n' |
+tr -s '\n' |
+grep "^[pk\'mnwlhaeiou]*$" |
+sort -u

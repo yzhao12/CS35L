@@ -1,0 +1,146 @@
+1. Use the command: man -k "string", where string is the word we want
+to look for.
+
+I found this by using the command: man man to access the manual pages
+for the man command, and in there was a list of options, and -k was an
+option that did the same thing as the command: apropos. By doing: man
+apropos, I found that apropos did what the question asks for. So I
+then used man -k "string", which printed out a list of commands in the
+first column, the manual section they're from in the second column,
+and the sentence that contains the string we're looking for in the
+third column.
+
+
+2. cp is located at /bin/cp and wc is located at /usr/bin/wc
+
+I found this by using the whereis command with the -b option on each
+of the commands cp and wc. When I used: whereis cp, three paths were
+printed, and I didn't know which one to use, so I used: man whereis to
+find that using the option -b will make whereis only print out the
+location of the binary of the command.
+
+
+3. X is a program that manages the graphics operations and windows of
+other programs. w is a program that shows information about which
+users are currently using the machine, the processes each user is
+running, and other information about the users. [ has no manual entry.
+
+I found the programs by running: find /usr/bin -executable -name
+?. This command outputted three lines, each on a separate line:
+/usr/bin/X, /usr/bin/w, /usr/bin/[. This command finds files in the
+specified directory with the specified name. So here I'm looking in
+/usr/bin for executables with the name ?, and ? is the metacharacter
+that means look for all files with a single character name. I found
+this command in the powerpoint, and looked in man find to know how to
+use the name option and specify a directory.
+
+
+4. When that symbolic link is executed, /etc/alternatives/emacs is the
+file that's actually executed.
+
+I used readlink /usr/bin/emacs to find the file that's actually
+executed. This command printed out exactly
+/etc/alternatives/emacs. Readlink prints the value of a symbolic
+link. I found this command in the powerpoint.
+
+
+5. chmod g+s means to set the group id upon execution. This basically
+means that when the executable is executed, it will have the
+permissions of the executable's group, but only while it is
+executed. chmod o-x means to remove the "executing" permission of a
+file for all other users. This means that other users (users not part
+of user or group) will not be able to run the file.
+
+All of the above information are from lecture/powerpoint.
+
+
+6. The -mtime option of find lets me do that, and use -type to specify
+files.
+
+This was found by using the command: man find, then reading the -mtime
+option.
+
+
+7. For 3 weeks this would be: find / -type d -mtime -21
+
+This command, when I run it, prints of a list of directory paths of
+differnt directories that have been modified in the last three weeks.
+
+
+8. There are 20 symbolic links
+
+I first used: whereis find to find the directory where find is
+located. Then I used: cd /bin to go to that directory. Then I used the
+command: find -type l to find all of the files which are symbolic
+links. This command listed all of the files that are symbolic links,
+one on each line.
+
+
+9. The oldest regular file in that directory is
+"libgamin-1.so.0.1.10".
+
+I first used: cd /usr/lib to go to the directory, and then I used: ls
+-atl to list all of the files in the directory in order of the time
+that the file was last modified. The command outputted a list of all
+files, directories, and symbolic links in the directory organized in
+columns, and "libgamin-1.so.0.1.10" was a regular file because its
+permission line begun with a -.
+
+
+10. The locale command gets its data from the environment variables
+LC_CTYPE, LC_COLLATE, etc.
+
+Found using: man locale, which printed out the manual page for locale.
+
+
+11. The list of commands that have sort in their name:
+Buffer-menu-sort, Buffer-menu-sort-by-column, ibuffer-invert-sorting,
+ibuffer-toggle-sorting-mode, rmail-sort-by-author,
+rmail-sort-by-correspondent, rmail-sort-by-date, rmail-sort-by-labels,
+rmail-sort-by-lines, rmail-sort-by-recipient, rmail-sort-by-subject,
+sort-columns, sort-fields, sort-lines, sort-numeric-fields,
+sort-pages, sort-paragraphs, sort-regexp-fields.
+
+These commands are all commands that sort a certain region of text by
+a certain criteria.
+
+I found this list by using the emacs help command and apropos: C-h a
+sort. This printed a list of commands and a short description of what
+each command does. I found this command on the page that is shown when
+emacs is first opened.
+
+
+12.  C-M-a: move to the beginning of current function C-M-b: move
+backward over the next expression C-M-c: exits the recursive edit
+C-M-d: moves to the right of the next left parentheses C-M-e: moves to
+the end of the current function C-M-f: moves forward over the next
+expression C-M-g: not a command C-M-h: sets the region around the
+current function Yes their actions can be listed concisesly.
+
+I found the list of commands in emacs by using the command: C-h b, and
+scrolled down until I saw the list of commands that start with
+C-M-. Its output looks something like this: C-M-a beginning-of-defun
+C-M-b backward-sexp C-M-c exit-recursive-edit ....
+
+
+13. C-g is the ASCII character BEL, which interrupts what emacs is
+doing, and gets the user out of anything emacs is currently
+asking. This command will cancel whatever command was last written,
+run, or partially written by the user.
+
+This information was found in the emacs tutorial linked to us in the
+assignment spec.
+
+
+14. Yanking pastes the next set of text in the kill-ring into the
+current buffer.
+
+Information found in the emacs tutorial linked to us in the assignment
+spec.
+
+
+15. Dired shows the used and available memory, where ls -l does
+not. Dired shows hidden files, ls -l does not.
+
+Information found by running: M-x dired and then /usr/bin in emacs,
+and running: ls -l in linux, and then comparing the two outputs.
