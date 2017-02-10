@@ -1,0 +1,144 @@
+1. Wrote tr2b.c and tr2u.c, which first checks if the 2 inputs are of the same
+length, then checks if there are duplicates in the "from" input, and
+then goes through the file, getting each letter and then seeing if
+it's in the "from" string. If it is, print out its equivalent in the
+"to" string, and if it's not, then print the letter itself out.
+
+2. Used strace
+
+a. To test while reading from a file and writing to another
+
+tr2b
+
+strace -c ./tr2b abcABC xyzXYZ <fivemillion >fivemilliontr
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000353           3       129           write
+  0.00    0.000000           0       131           read
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         4           fstat
+  0.00    0.000000           0        10           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000353                   286         1 total
+
+tr2u
+
+strace -c ./tr2u abcABC xyzXYZ <fivemillion >fivemilliontr
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 57.83    0.745194           0   5567289           write
+ 42.17    0.543489           0   5567291           read
+  0.00    0.000017          17         1           munmap
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         2           fstat
+  0.00    0.000000           0         8           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    1.288700              11134602         1 total
+
+tr2u used significatly more system calls. tr2b used about 11 million
+while tr2b only used about 300.
+
+		      
+b. To test while reading from a file and writing to terminal
+
+tr2b
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 99.71    0.021823           0    265109           write
+  0.29    0.000063           1        87           read
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         4           fstat
+  0.00    0.000000           0        10           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.021886                265222         1 total
+		       
+tr2u
+
+strace -c ./tr2u abcABC xyzXYZ <fivemillion
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 56.38    0.524399           0   5567289           write
+ 43.62    0.405748           0   5567291           read
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         2           fstat
+  0.00    0.000000           0         8           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.930147              11134602         1 total
+		      
+tr2u still used 11 million system calls, but tr2b used 260k this
+time. tr2u still used many more system calls than tr2b.
+
+3. Using time to measure how fast the program is
+
+a. Writing to a file
+
+tr2b
+
+time ./tr2b abcABC xyzXYZ <fivemillion >fivemilliontr
+
+real    0m0.263s
+user    0m0.158s
+sys     0m0.009s
+
+
+tr2u
+
+time ./tr2u abcABC xyzXYZ <fivemillion >fivemilliontr
+
+real    0m6.100s
+user    0m0.309s
+sys     0m5.688s
+
+
+b. Writing to terminal
+
+tr2b
+
+time ./tr2b abcABC xyzXYZ <fivemillion
+
+real    0m3.579s
+user    0m0.255s
+sys     0m0.589s
+
+
+tr2u
+
+time ./tr2u abcABC xyzXYZ <fivemillion
+
+real    0m13.336s
+user    0m0.333s
+sys     0m8.134s
+
+
+When writing to a file, tr2b is about 5.8 seconds faster than tr2u,
+and while writing to terminal, tr2b is about 10 seconds faster than
+tr2u.
+

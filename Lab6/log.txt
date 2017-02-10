@@ -1,0 +1,41 @@
+Partner: Hao Nguyen
+
+Server:
+
+1. Loaded up Ubuntu on my computer, opened up the terminal, and set up
+the environment by checking openssh-server and openssh-client are
+installed and installing whatever I am missing with dpkg
+--get-selections | grep openssh (check) and sudo apt-get install
+openssh-server/client (install)
+
+2. Used the command sudo useradd -d /home/hao -m hao to create an
+account for my partner
+
+3. Used the command sudo passwd hao to create a password
+
+4. Changed directories with cd /home/hao
+
+5. Used the command sudo mkdir .ssh to make a .ssh directory for my
+partner
+
+6. Used the command sudo chown -R hao .ssh to make my partner the
+owner of the .ssh directory and everything in it
+
+7. Used the command sudo chmod 700 .ssh to give my partner all
+privileges on the .ssh directory
+
+8. Used ifconfig to find my IP address and exchanged IP addresses
+
+Client:
+
+1. Partner's IP was 169.232.106.40
+
+2. Used ssh-keygen to generate a key pair
+
+3. Used ssh-copy-id -i yang@169.232.106.40 to copy the key to my
+partner's server
+
+4. Used ssh-add to add the private key to ssh-agent
+
+5. Used ssh -X yang@169.232.106.40 to ssh to the server and ran a
+command xterm

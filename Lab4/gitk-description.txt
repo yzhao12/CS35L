@@ -1,0 +1,5 @@
+The topleft window shows a visualization of the log of commits, merges
+and other changes made. The top middle shows the names and emails of
+the people who made the changes, and the top right shows the time the
+change was made. The bottom left shows the diff file for the
+change. The bottom right shows the files impacted by the selected commit.

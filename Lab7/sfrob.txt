@@ -1,0 +1,89 @@
+1. Measuring the time it takes for sfrobu and sfrob to run
+Using frobtime1, which is a file with 500 random strings
+
+time ./sfrob <frobtime1
+real    0m0.002s
+user    0m0.001s
+sys     0m0.001s
+
+
+time ./sfrobu <frobtime1
+real    0m0.009s
+user    0m0.002s
+sys     0m0.005s
+
+Comparisons: 3832
+
+
+Using frobtime3, modified to have 1000 random strings
+
+time ./sfrob <frobtime3
+real    0m0.003s
+user    0m0.002s
+sys     0m0.002s
+
+
+time ./sfrobu <frobtime3
+real    0m0.015s
+user    0m0.001s
+sys     0m0.013s
+
+Comparisons: 8668
+ 
+
+Using frobtime5, modified to have 2000 random strings
+
+time ./sfrob <frobtime5
+real    0m0.004s
+user    0m0.003s
+sys     0m0.001s
+
+
+time ./sfrobu <frobtime5
+real    0m0.031s
+user    0m0.004s
+sys     0m0.026s
+
+Comparisons: 19383
+
+
+In the 500 and 1000 random string files, sfrob is much faster
+than sfrobu, about 4 or 5 five times faster. And in the 2000 random
+string file, sfrob is 8 times faster than sfrobu.
+
+
+Number of Lines: 500    Comparisons: 3832
+Number of Lines: 1000   Comparisons: 8668
+Number of Lines: 2000   Comparisons: 19383
+
+Based on these numbers, the number comparisons as a function of the
+number of lines N is about Nlog(N).
+
+
+2. Comparing sfrobs to sfrob and sfrobu
+
+
+Using frobtime1, which is a file with 500 random strings
+time ./sfrobs <frobtime1
+real    0m0.006s
+user    0m0.001s
+sys     0m0.007s
+
+
+Using frobtime3, a file with 1000 random strings
+time ./sfrobs <frobtime3
+real    0m0.006s
+user    0m0.003s
+sys     0m0.005s
+
+
+Using frobtime5, a file with 2000 random strings
+time ./sfrobs <frobtime5
+real    0m0.013s
+user    0m0.007s
+sys     0m0.005s
+
+
+Compared to sfrob and sfrobu, sfrobs is in the middle
+performance-wise, the times are all lower than those of sfrobu, but
+higher than those of sfrob.

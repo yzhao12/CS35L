@@ -1,0 +1,81 @@
+1. Use mkdir gitroot to create a new directory called gitroot and use
+cd gitroot to change directories into it
+
+2. Use git clone git://git.savannah.gnu.org/diffutils.git to download
+a copy of the Diffutils Git repository
+
+3. Use cd diffutils to change directories into ~/gitroot/diffutils
+
+4. Use git log >git-log.txt to get the log of changes and direct the
+output to a file called git-log.txt
+
+5. Use git tag >git-tags.txt to get the list of tags and put the
+output into a file called git-tags.txt
+
+6. Use: git format-patch -1 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f
+--std >quote-patch.txt to output the patch. The -1 option to only
+output the first patch starting from the specified commit hash number,
+and --std to make the command output the patch to standard output, and
+>quote-patch.txt to put it into a document
+
+7. Check git-tags.txt to see that version 3.0 has the tag v3.0, then
+use git checkout v3.0 to check it out
+
+8. Create a new branch to retain my commits: git checkout -b lab
+
+9. Use patch -p1 <quote-patch.txt to patch the file. Pressed enter and
+y when prompted for a file to patch three times.
+
+10. git status prints out 2 lists, a list of modified files, and
+another list of untracked files
+
+11. Go through all of the files that show up as modified and aren't .c
+files when git status is typed. For each one open it in emacs and use
+C-x v u to revert all the changes to it
+
+12. Go through each .c file, use C-x v = to open up the vc-diff
+buffer, and then go through each hunk with M-n and use C-c C-a to
+revert all of the changes that aren't changes to character string
+constants
+
+13. The list of files that we end up with is
+src/cmp.c
+src/diff.c
+src/diff3.c
+src/dir.c
+src/sdiff.c
+src/util.c
+
+14. Found 2 reject files, diff3.c.rej and diff.c.rej, and copied the
+modified lines that didn't make it into the file into their respective
+files.
+
+15. Use git clean -f to forcibly remove files that are untracked
+
+16. Use emacs to open up README-hacking, and run the commands
+./bootstrap to download additional files, ./configure to configure,
+and make to make the program, and finally run make check
+
+17. Use the commands diff . - and diff --help to test that the patch
+worked, and the outputs show that the patch did work, all of the
+quotes are correctly formatted, all ` are replaced with the correct
+values
+
+18. Go to gitroot with cd ~/gitroot, then make two directories: mkdir
+diffutils-3.0 and mkdir diffutils-3.0-patch. Copy my patched diffutils
+files into diffutils-3.0-patch with cp -r diffutils/
+diffutils-3.0-patch. Get a new copy of the old diffutils and put it
+into diffutils-3.0 by changing directories into diffutils-3.0 using cd
+diffutils-3.0 and then using git clone
+git://git.savannah.gnu.org/diffutils.git to get a copy
+
+19. Then go to gitroot again with cd ~/gitroot. And use
+~/gitroot/diffutils/src/diff -pru diffutils-3.0 diffutils-3.0-patch
+>quote-3.0-test.txt to generate the differences and put it into a
+document
+
+20. Ran diff quote-3.0-test.txt quote-3.0-patch.txt, and examined the
+output. The files are definitely not identical, and the difference are
+all of the changes made to the character-strings where we changed ` to
+'
+

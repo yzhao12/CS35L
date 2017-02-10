@@ -39,7 +39,7 @@ Select or reject lines common to two files"""
         f2 = open(file2, 'r')
         lines2 = f2.readlines()
         f2.close()
-
+        
     if options.unsorted == False:
         inboth = []
         preallwords = lines1 + lines2

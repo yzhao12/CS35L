@@ -1,0 +1,23 @@
+1. Use git checkout v3.0 -f -b quote to create a new branch called
+quote
+
+2. Use patch -p1 <~/gitroot/quote-3.0-patch.txt to install the change
+into this new branch
+
+3. Go through each of the 6 documents that were modified, for each use
+C-x 4 a to open up the changelog and copy the change message from
+ChangeLog-2008 to be the new change message
+
+4. Use git add <the 6 files> to add all of the modified files to the
+stage, and then use git commit -m <pasted contents of the ChangeLog>
+to commit the files
+
+5. Use git format-patch to make formatted-patch
+
+6. Name: Yaacov Tarko Used git am formatted-patch.txt to apply the
+patch, but the patch failed
+
+7. Use make distdir to make another changelog
+
+8. Used emacs to open diffutils*/ChangeLog and saw that my ChangeLog
+was in there

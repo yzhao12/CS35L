@@ -1,0 +1,21 @@
+1. The network would still be secure because the data sent over the
+network are all encrypted with the session key
+
+(1). The network would still be secure because keystrokes do not
+betray anything about the contents of the public, private, and session
+keys that were generated, so the other teams would still not be able
+to decrypt the information sent over the network without the keys
+
+(2). The network would be compromised because if the other teams could
+see and copy files from our USB drive, then they can copy the key pair
+that was generated and use the keys to decrypt the messages we send
+over the network
+
+2. The verify command only verifies that the signatures on the
+file matches, but the key used to generate that signature could be
+made under any name. So a random person could use my name to create a
+key, and they generate a signature for a file, and gpg --verify would
+say that the signature matches. To solve this problem, we could
+establish an official database for every individual and his or her
+key, so the command can look up which key matches which person. And a
+person can only have one key.
